@@ -1,0 +1,32 @@
+{
+  "name": "brinca-bot",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp completo com piadas, jogos, utilidades e sistema de XP",
+  "type": "module",
+  "main": "index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node scripts/launch.js",
+    "dev": "node --watch scripts/launch.js",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check index.js && node --check src/handler.js",
+    "reset:session": "node scripts/reset-session.js"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "baileys",
+    "piadas",
+    "jogos"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@whiskeysockets/baileys": "6.7.22",
+    "chalk": "4.1.2",
+    "dotenv": "16.6.1",
+    "pino": "10.4.0",
+    "qrcode-terminal": "0.12.0"
+  }
+}

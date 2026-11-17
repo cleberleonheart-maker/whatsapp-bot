@@ -1,0 +1,8 @@
+node_modules/
+auth_info/
+data/runtime/
+.env
+npm-install*.log
+node20-install.log
+*.tmp
+.DS_Store

@@ -1,0 +1,304 @@
+{
+  "questions": [
+    {
+      "question": "Qual é a capital do Brasil?",
+      "options": [
+        "São Paulo",
+        "Brasília",
+        "Rio de Janeiro",
+        "Belo Horizonte"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Quantos planetas existem no sistema solar?",
+      "options": [
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual é o maior animal do mundo?",
+      "options": [
+        "Elefante",
+        "Baleia-azul",
+        "Dinossauro",
+        "Girafa"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Em qual ano o Brasil foi descoberto?",
+      "options": [
+        "1492",
+        "1500",
+        "1522",
+        "1600"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual é o elemento químico com símbolo 'Au'?",
+      "options": [
+        "Prata",
+        "Ouro",
+        "Alumínio",
+        "Argônio"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Quem escreveu 'Dom Casmurro'?",
+      "options": [
+        "Machado de Assis",
+        "José de Alencar",
+        "Graciliano Ramos",
+        "Clarice Lispector"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Qual é a moeda oficial do Japão?",
+      "options": [
+        "Won",
+        "Yuan",
+        "Iene",
+        "Dólar"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "Quantos lados tem um hexágono?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual é o maior oceano da Terra?",
+      "options": [
+        "Atlântico",
+        "Índico",
+        "Pacífico",
+        "Ártico"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "Qual planeta é conhecido como Planeta Vermelho?",
+      "options": [
+        "Vênus",
+        "Marte",
+        "Júpiter",
+        "Mercúrio"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual é a cor da clorofila?",
+      "options": [
+        "Vermelha",
+        "Amarela",
+        "Verde",
+        "Azul"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "Quem pintou a Mona Lisa?",
+      "options": [
+        "Van Gogh",
+        "Leonardo da Vinci",
+        "Picasso",
+        "Michelangelo"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual é o maior número primo abaixo de 100?",
+      "options": [
+        "89",
+        "93",
+        "97",
+        "99"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "Em qual continente fica o Egito?",
+      "options": [
+        "Ásia",
+        "Europa",
+        "África",
+        "América"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "Qual palavra é um palíndromo (lê-se igual de trás para frente)?",
+      "options": [
+        "casa",
+        "ovo",
+        "carro",
+        "mesa"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual linguagem de programação foi criada por Guido van Rossum?",
+      "options": [
+        "Java",
+        "Python",
+        "C++",
+        "Ruby"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Quantos ossos tem o corpo humano adulto?",
+      "options": [
+        "186",
+        "206",
+        "226",
+        "246"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual é a capital da Austrália?",
+      "options": [
+        "Sydney",
+        "Melbourne",
+        "Canberra",
+        "Perth"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "Qual empresa criou o WhatsApp?",
+      "options": [
+        "Google",
+        "Meta",
+        "Microsoft",
+        "Apple"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "O que significa a sigla 'HTTP'?",
+      "options": [
+        "Hyper Text Transfer Protocol",
+        "High Transfer Text Protocol",
+        "Hyper Text Transmission Program",
+        "Home Text Transfer Protocol"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Qual é o único planeta que pode sustentar vida conhecida?",
+      "options": [
+        "Marte",
+        "Vênus",
+        "Terra",
+        "Netuno"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "Quem é o autor de '1984'?",
+      "options": [
+        "Aldous Huxley",
+        "George Orwell",
+        "Ray Bradbury",
+        "Jorge Luis Borges"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Quantas cordas tem um violão padrão?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "Qual é a temperatura de fusão da água em graus Celsius?",
+      "options": [
+        "0",
+        "32",
+        "100",
+        "-10"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Qual é o maior país do mundo em área?",
+      "options": [
+        "Canadá",
+        "China",
+        "Rússia",
+        "Estados Unidos"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "Em que ano ocorreu a primeira Copa do Mundo?",
+      "options": [
+        "1924",
+        "1930",
+        "1934",
+        "1950"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual é o símbolo químico do ferro?",
+      "options": [
+        "Fe",
+        "Fr",
+        "F",
+        "Ir"
+      ],
+      "answer": 1
+    },
+    {
+      "question": "Quantos minutos tem uma hora?",
+      "options": [
+        "50",
+        "60",
+        "70",
+        "100"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual é a capital de Portugal?",
+      "options": [
+        "Porto",
+        "Lisboa",
+        "Braga",
+        "Coimbra"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Qual destes é um mamífero?",
+      "options": [
+        "Tubarão",
+        "Baleia",
+        "Avestruz",
+        "Crocodilo"
+      ],
+      "answer": 2
+    }
+  ]
+}

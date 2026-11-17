@@ -1,0 +1,41 @@
+import dotenv from 'dotenv';
+import path from 'node:path';
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+
+function int(value, fallback) {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function bool(value, fallback) {
+  if (value === undefined || value === '') return fallback;
+  return /^(1|true|sim|yes|on)$/i.test(String(value));
+}
+
+export const config = {
+  prefix: process.env.PREFIX || '!',
+  altPrefixes: (process.env.ALT_PREFIXES || '/').split(',').map((p) => p.trim()).filter(Boolean),
+  ownerNumber: (process.env.OWNER_NUMBER || '').replace(/\D/g, ''),
+  sessionDir: path.resolve(process.cwd(), process.env.SESSION_DIR || './auth_info'),
+  dataDir: path.resolve(process.cwd(), process.env.DATA_DIR || './data/runtime'),
+  logLevel: process.env.LOG_LEVEL || 'info',
+  timezone: process.env.TZ || 'America/Sao_Paulo',
+  botName: process.env.BOT_NAME || 'BrincaBot',
+  botDescription: process.env.BOT_DESCRIPTION || 'Bot de WhatsApp com piadas, jogos e utilidades',
+  rateLimit: int(process.env.RATE_LIMIT, 12),
+  cooldown: int(process.env.COOLDOWN_MS, 2500),
+  autoRead: bool(process.env.AUTO_READ, true),
+  autoPresence: bool(process.env.AUTO_PRESENCE, true),
+  welcomeEnabled: bool(process.env.WELCOME_ENABLED, true),
+  antilinkDefault: bool(process.env.ANTILINK_DEFAULT, false),
+  filterDefault: bool(process.env.FILTER_DEFAULT, false),
+  xpPerMessage: int(process.env.XP_PER_MESSAGE, 3),
+  reconnectDelay: int(process.env.RECONNECT_DELAY_MS, 5000),
+  maxReconnects: int(process.env.MAX_RECONNECTS, 0),
+  ocrApiKey: process.env.OCR_API_KEY || 'helloworld',
+  clearSessionOnLogout: bool(process.env.CLEAR_SESSION_ON_LOGOUT, false),
+  ytdlpBin: process.env.YTDLP_BIN || '',
+};
+
+export const prefixes = [config.prefix, ...config.altPrefixes];
