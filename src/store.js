@@ -23,7 +23,15 @@ const USER_DEFAULTS = {
   titles: [],
   activeTitle: null,
   inventory: {},
-  rpg: null
+  rpg: null,
+  bank: 0,
+  bankInterestAt: 0,
+  workAt: 0,
+  investAt: 0,
+  jobs: 0,
+  investments: 0,
+  taxesPaid: 0,
+  taxDebt: 0
 };
 
 const GROUP_DEFAULTS = {
@@ -92,6 +100,39 @@ export class Store {
     const user = this.user(jid);
     if (user.coins < amount) return false;
     user.coins -= amount;
+    return true;
+  }
+
+  depositCoins(jid, amount) {
+    const user = this.user(jid);
+    if (user.coins < amount) return false;
+    user.coins -= amount;
+    user.bank = (user.bank || 0) + amount;
+    if (!user.bankInterestAt) user.bankInterestAt = Date.now();
+    return true;
+  }
+
+  withdrawCoins(jid, amount) {
+    const user = this.user(jid);
+    if ((user.bank || 0) < amount) return false;
+    user.bank -= amount;
+    user.coins += amount;
+    return true;
+  }
+
+  addTaxDebt(jid, amount) {
+    const user = this.user(jid);
+    user.taxDebt = Math.max(0, (user.taxDebt || 0) + amount);
+    return user.taxDebt;
+  }
+
+  payTax(jid) {
+    const user = this.user(jid);
+    const debt = user.taxDebt || 0;
+    if (debt <= 0 || user.coins < debt) return false;
+    user.coins -= debt;
+    user.taxDebt = 0;
+    user.taxesPaid = (user.taxesPaid || 0) + 1;
     return true;
   }
 

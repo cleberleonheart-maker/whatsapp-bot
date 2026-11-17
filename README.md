@@ -84,6 +84,11 @@ O menu aceita `!ajuda <nº>`, `!ajuda <categoria>` (ex.: `!ajuda Jogos`) e `!aju
 | `!titulo <id\|none>` | Equipar/remover título |
 | `!apostar 50 cara` | Apostar moedas em cara/coroa |
 | `!transferir @user 50` | Enviar moedas para outro usuário |
+| `!banco` | Carteira, banco, juros e impostos |
+| `!depositar <valor>`, `!sacar <valor>` | Guardar/retirar moedas do banco |
+| `!trabalho` | Trabalhar para ganhar moedas (3 min) |
+| `!investir <10 a 500>` | Investir com risco de lucro ou prejuízo (10 min) |
+| `!imposto [pagar]` | Consultar ou pagar impostos pendentes |
 
 ### RPG
 | Comando | Descrição |
@@ -94,7 +99,7 @@ O menu aceita `!ajuda <nº>`, `!ajuda <categoria>` (ex.: `!ajuda Jogos`) e `!aju
 | `!atacar`, `!defender`, `!curar`, `!fugir` | Ações em batalha |
 | `!descansar` | Recuperar HP (10 min) |
 | `!inventario`, `!usar pocao` | Itens e poções |
-| `!missoes`, `!missoes resgatar` | Missões diárias com recompensas |
+| `!missoes`, `!missoes resgatar [id]` | Missões diárias com recompensas |
 
 ### Mídia
 | Comando | Descrição |

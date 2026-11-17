@@ -1,5 +1,24 @@
 import chalk from 'chalk';
 
+const NOISY_SESSION_LOGS = [
+  'Closing session:',
+  'Opening session:',
+  'Session already closed',
+  'Session already open'
+];
+
+export function isNoisySessionLog(...args) {
+  return typeof args[0] === 'string' && NOISY_SESSION_LOGS.some((prefix) => args[0].startsWith(prefix));
+}
+
+for (const method of ['info', 'warn']) {
+  const original = console[method].bind(console);
+  console[method] = (...args) => {
+    if (isNoisySessionLog(...args)) return;
+    original(...args);
+  };
+}
+
 const colored = {
   boot: chalk.cyan,
   ok: chalk.green,

@@ -17,8 +17,11 @@ const BOSS = { name: 'Dragão Ancião', emoji: '🐉', hp: 85, atk: 14, def: 5, 
 
 const MISSIONS = [
   { id: 'mensagens', name: 'Enviar 10 mensagens', icon: '💬', goal: 10, reward: 40, field: 'messages' },
+  { id: 'comandos', name: 'Usar 5 comandos', icon: '⌨️', goal: 5, reward: 30, field: 'commands' },
   { id: 'vitorias', name: 'Vencer 1 batalha', icon: '⚔️', goal: 1, reward: 60, field: 'wins' },
-  { id: 'comandos', name: 'Usar 5 comandos', icon: '⌨️', goal: 5, reward: 30, field: 'commands' }
+  { id: 'trabalhos', name: 'Trabalhar 1 vez', icon: '💼', goal: 1, reward: 50, field: 'jobs' },
+  { id: 'investimentos', name: 'Fazer 1 investimento', icon: '📊', goal: 1, reward: 40, field: 'investments' },
+  { id: 'impostos', name: 'Pagar imposto', icon: '🧾', goal: 1, reward: 35, field: 'taxesPaid' }
 ];
 
 function keyFor(ctx) {
@@ -276,33 +279,41 @@ export const rpgCommands = [
     run(ctx) {
       const user = ctx.store.user(ctx.sender);
       const today = new Date().toDateString();
+      const fields = ['messages', 'commands', 'wins', 'jobs', 'investments', 'taxesPaid'];
       if (!user.missions || user.missions.date !== today) {
         user.missions = {
           date: today,
-          start: { messages: user.messages, wins: user.wins, commands: user.commands },
+          start: Object.fromEntries(fields.map((field) => [field, user[field] || 0])),
           claimed: []
         };
       }
+      const progressOf = (mission) =>
+        Math.min(mission.goal, (user[mission.field] || 0) - (user.missions.start[mission.field] || 0));
       const lines = MISSIONS.map((mission) => {
-        const progress = Math.min(mission.goal, (user[mission.field] || 0) - (user.missions.start[mission.field] || 0));
+        const progress = progressOf(mission);
         const done = progress >= mission.goal;
         const claimed = user.missions.claimed.includes(mission.id);
         return `${mission.icon} ${mission.name} — ${progress}/${mission.goal} ` +
-          (claimed ? '✅ resgatada' : done ? '🎁 use `!missoes resgatar`' : '⏳');
+          (claimed ? '✅ resgatada' : done ? `🎁 \`${ctx.prefix}missoes resgatar ${mission.id}\`` : '⏳');
       });
       if (normalize(ctx.args[0]) === 'resgatar') {
+        const wanted = normalize(ctx.args[1]);
+        const targets = wanted ? MISSIONS.filter((mission) => mission.id === wanted) : MISSIONS;
+        if (!targets.length) return ctx.reply('Missão não encontrada. Veja `!missoes`.');
         let total = 0;
-        for (const mission of MISSIONS) {
-          const progress = (user[mission.field] || 0) - user.missions.start[mission.field];
-          if (progress >= mission.goal && !user.missions.claimed.includes(mission.id)) {
-            user.missions.claimed.push(mission.id);
-            user.coins += mission.reward;
-            total += mission.reward;
-          }
+        let claimed = 0;
+        for (const mission of targets) {
+          if (progressOf(mission) < mission.goal || user.missions.claimed.includes(mission.id)) continue;
+          user.missions.claimed.push(mission.id);
+          ctx.store.addCoins(ctx.sender, mission.reward);
+          total += mission.reward;
+          claimed += 1;
         }
-        return ctx.reply(total ? `🎁 Você resgatou ${total} moedas!` : 'Nenhuma missão pronta para resgate.');
+        return ctx.reply(total
+          ? `🎁 Você resgatou ${claimed} ${claimed === 1 ? 'missão' : 'missões'} e ganhou *${total} moedas*!`
+          : 'Nenhuma missão pronta para resgate.');
       }
-      return ctx.reply(`📜 *Missões diárias*\n\n${lines.join('\n')}`);
+      return ctx.reply(`📜 *Missões diárias*\n\n${lines.join('\n')}\n\nResgate todas com \`${ctx.prefix}missoes resgatar\` ou uma específica pelo id.`);
     }
   }
 ];

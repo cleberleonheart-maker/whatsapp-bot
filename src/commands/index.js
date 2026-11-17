@@ -11,6 +11,7 @@ import { rpgCommands } from './rpg.js';
 import { novosJogosCommands } from './jogosnovos.js';
 import { midiaCommands } from './midia.js';
 import { playCommands } from './play.js';
+import { bancoCommands } from './banco.js';
 
 export const commands = [
   ...infoCommands,
@@ -19,6 +20,7 @@ export const commands = [
   ...novosJogosCommands,
   ...rpgCommands,
   ...economiaCommands,
+  ...bancoCommands,
   ...utilidadesCommands,
   ...socialCommands,
   ...midiaCommands,
