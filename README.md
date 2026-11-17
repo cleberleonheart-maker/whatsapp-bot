@@ -90,6 +90,15 @@ O menu aceita `!ajuda <nº>`, `!ajuda <categoria>` (ex.: `!ajuda Jogos`) e `!aju
 | `!investir <10 a 500>` | Investir com risco de lucro ou prejuízo (10 min) |
 | `!imposto [pagar]` | Consultar ou pagar impostos pendentes |
 
+### Eventos
+| Comando | Descrição |
+|---|---|
+| `!evento` | Evento semanal, progresso e recompensa |
+| `!evento resgatar` | Resgatar recompensa quando a meta é atingida |
+| `!economiarank` | Ranking de economia com bônus para o top 3 |
+
+Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, investimentos ou batalhas. O top 3 do ranking recebe +50%, +25% e +10% na recompensa.
+
 ### RPG
 | Comando | Descrição |
 |---|---|

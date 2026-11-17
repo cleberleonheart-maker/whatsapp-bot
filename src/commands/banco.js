@@ -99,6 +99,7 @@ export const bancoCommands = [
       ctx.store.addTaxDebt(ctx.sender, Math.floor(gross * 0.1));
       user.workAt = now;
       user.jobs = (user.jobs || 0) + 1;
+      ctx.store.trackEvent?.('trabalho', 1);
 
       return ctx.reply(
         `💼 Você trabalhou como *${job}* e recebeu *${net} moedas*.\n` +
@@ -140,6 +141,7 @@ export const bancoCommands = [
       }
       user.investAt = now;
       user.investments = (user.investments || 0) + 1;
+      ctx.store.trackEvent?.('investimentos', 1);
 
       return ctx.reply(
         `${profit ? '📈' : '📉'} *Investimento ${profit ? 'lucrativo' : 'com prejuízo'}*\n\n` +

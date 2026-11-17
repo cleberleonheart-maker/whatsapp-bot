@@ -39,6 +39,24 @@ export function formatNumber(value) {
   return new Intl.NumberFormat('pt-BR').format(value);
 }
 
+export function weekInfo(date = new Date()) {
+  const current = new Date(date.getTime());
+  const day = current.getUTCDay() || 7;
+  current.setUTCDate(current.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(current.getUTCFullYear(), 0, 1));
+  const week = Math.ceil((((current - yearStart) / 86400000) + 1) / 7);
+  const next = new Date(date.getTime());
+  const daysUntilNext = (8 - day) % 7 || 7;
+  next.setUTCDate(next.getUTCDate() + daysUntilNext);
+  next.setUTCHours(0, 0, 0, 0);
+  return {
+    year: current.getUTCFullYear(),
+    week,
+    key: `${current.getUTCFullYear()}-W${String(week).padStart(2, '0')}`,
+    next
+  };
+}
+
 export function formatMs(ms) {
   const seconds = Math.floor(ms / 1000);
   const days = Math.floor(seconds / 86400);

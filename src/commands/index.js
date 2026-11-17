@@ -12,6 +12,7 @@ import { novosJogosCommands } from './jogosnovos.js';
 import { midiaCommands } from './midia.js';
 import { playCommands } from './play.js';
 import { bancoCommands } from './banco.js';
+import { eventoCommands } from './eventos.js';
 
 export const commands = [
   ...infoCommands,
@@ -21,6 +22,7 @@ export const commands = [
   ...rpgCommands,
   ...economiaCommands,
   ...bancoCommands,
+  ...eventoCommands,
   ...utilidadesCommands,
   ...socialCommands,
   ...midiaCommands,

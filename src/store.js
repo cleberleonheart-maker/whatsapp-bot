@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { config } from './config.js';
+import { weekInfo } from './utils.js';
 
 function loadJson(file, fallback) {
   try {
@@ -32,6 +33,12 @@ const USER_DEFAULTS = {
   investments: 0,
   taxesPaid: 0,
   taxDebt: 0
+};
+
+const EVENT_DEFAULTS = {
+  week: '',
+  counters: {},
+  claimed: []
 };
 
 const GROUP_DEFAULTS = {
@@ -67,6 +74,7 @@ export class Store {
     this.groupsFile = path.join(directory, 'groups.json');
     this.statsFile = path.join(directory, 'stats.json');
     this.activityFile = path.join(directory, 'activity.json');
+    this.eventsFile = path.join(directory, 'events.json');
     this.users = loadJson(this.usersFile, {});
     for (const [jid, data] of Object.entries(this.users)) {
       this.users[jid] = { ...USER_DEFAULTS, ...data };
@@ -76,6 +84,7 @@ export class Store {
       this.groups[jid] = { ...cloneGroupDefaults(), ...data };
     }
     this.activity = loadJson(this.activityFile, {});
+    this.events = loadJson(this.eventsFile, { ...EVENT_DEFAULTS, counters: {}, claimed: [] });
     this.stats = loadJson(this.statsFile, { messages: 0, commands: 0, startedAt: Date.now() });
     this.sessions = new Map();
     this.rateLimits = new Map();
@@ -93,6 +102,7 @@ export class Store {
   addCoins(jid, amount) {
     const user = this.user(jid);
     user.coins = Math.max(0, user.coins + amount);
+    if (amount > 0) this.trackEvent('economia', amount);
     return user.coins;
   }
 
@@ -134,6 +144,48 @@ export class Store {
     user.taxDebt = 0;
     user.taxesPaid = (user.taxesPaid || 0) + 1;
     return true;
+  }
+
+  eventState(date = new Date()) {
+    const { key } = weekInfo(date);
+    if (this.events.week !== key) {
+      this.events = { week: key, counters: {}, claimed: [] };
+    }
+    return this.events;
+  }
+
+  trackEvent(eventId, amount = 1) {
+    const state = this.eventState();
+    state.counters[eventId] = (state.counters[eventId] || 0) + amount;
+    return state;
+  }
+
+  markEventClaimed(jid) {
+    const state = this.eventState();
+    if (state.claimed.includes(jid)) return false;
+    state.claimed.push(jid);
+    return true;
+  }
+
+  economyRanking(limit = 10) {
+    return Object.entries(this.users)
+      .map(([jid, user]) => ({
+        jid,
+        coins: user.coins || 0,
+        bank: user.bank || 0,
+        debt: user.taxDebt || 0,
+        total: Math.max(0, (user.coins || 0) + (user.bank || 0) - (user.taxDebt || 0)),
+        xp: user.xp || 0
+      }))
+      .sort((a, b) => b.total - a.total || b.xp - a.xp)
+      .slice(0, limit);
+  }
+
+  economyPosition(jid) {
+    this.user(jid);
+    const ranking = this.economyRanking(Object.keys(this.users).length);
+    const index = ranking.findIndex((entry) => entry.jid === jid);
+    return index === -1 ? 0 : index + 1;
   }
 
   group(jid) {
@@ -251,6 +303,7 @@ export class Store {
       write(this.usersFile, this.users);
       write(this.groupsFile, this.groups);
       write(this.activityFile, this.activity);
+      write(this.eventsFile, this.events);
       write(this.statsFile, this.stats);
     } catch (error) {
       console.error('Erro ao salvar dados:', error.message);

@@ -11,6 +11,7 @@ const CATEGORY_META = [
   { name: 'Diversão', icon: '🎭' },
   { name: 'Jogos', icon: '🎮' },
   { name: 'Economia', icon: '💰' },
+  { name: 'Eventos', icon: '🎉' },
   { name: 'RPG', icon: '⚔️' },
   { name: 'Atividade', icon: '📊' },
   { name: 'Mídia', icon: '🎬' },

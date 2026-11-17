@@ -89,7 +89,8 @@ async function action(ctx, kind) {
     enemy.hp = Math.max(0, enemy.hp - damage);
     if (enemy.hp === 0) {
       ctx.store.deleteSession(key);
-      user.coins += enemy.reward;
+      ctx.store.addCoins(ctx.sender, enemy.reward);
+      ctx.store.trackEvent?.('vitorias', 1);
       hero.xp += enemy.xp;
       hero.wins += 1;
       user.wins += 1;
@@ -306,6 +307,7 @@ export const rpgCommands = [
           if (progressOf(mission) < mission.goal || user.missions.claimed.includes(mission.id)) continue;
           user.missions.claimed.push(mission.id);
           ctx.store.addCoins(ctx.sender, mission.reward);
+          ctx.store.trackEvent?.('missoes', 1);
           total += mission.reward;
           claimed += 1;
         }
