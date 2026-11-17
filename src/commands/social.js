@@ -1,4 +1,5 @@
 import { clamp } from '../utils.js';
+import { participantLabel } from '../participants.js';
 import { displayName } from './economia.js';
 
 export const socialCommands = [
@@ -14,7 +15,7 @@ export const socialCommands = [
       const medals = ['🥇', '🥈', '🥉'];
       const lines = top.map(([jid, data], index) => {
         const title = data.activeTitle ? ` [${data.activeTitle}]` : '';
-        return `${medals[index] || `${index + 1}º`} @${jid.split('@')[0]}${title} — *${data.xp} XP* (nível ${data.level})`;
+        return `${medals[index] || `${index + 1}º`} ${participantLabel(ctx, jid)}${title} — *${data.xp} XP* (nível ${data.level})`;
       });
       return ctx.reply(`🏆 *Ranking*\n\n${lines.join('\n')}`, {
         mentions: top.map(([jid]) => jid)
@@ -36,7 +37,7 @@ export const socialCommands = [
       const filled = Math.round(progress / 10);
       const bar = '█'.repeat(filled) + '░'.repeat(10 - filled);
       return ctx.reply(
-        `📊 *Nível de ${displayName(target, user)}*\n\n` +
+        `📊 *Nível de ${displayName(target, user, ctx)}*\n\n` +
         `Nível: *${user.level}*\nXP: *${user.xp}*\n` +
         `[${bar}] ${progress}%\n` +
         `Mensagens: ${user.messages} | Vitórias: ${user.wins} | Moedas: ${user.coins}`,

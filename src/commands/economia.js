@@ -1,4 +1,5 @@
 import { formatMs, formatDate, normalize, parseArgs, randomItem } from '../utils.js';
+import { participantLabel } from '../participants.js';
 
 const DAILY_COOLDOWN = 86400000;
 const DAILY_XP = 25;
@@ -22,8 +23,8 @@ function titleOf(user) {
   return user.activeTitle ? ` [${user.activeTitle}]` : '';
 }
 
-export function displayName(jid, user) {
-  return `@${jid.split('@')[0]}${titleOf(user)}`;
+export function displayName(jid, user, ctx) {
+  return `${ctx ? participantLabel(ctx, jid) : `@${String(jid).split('@')[0]}`}${titleOf(user)}`;
 }
 
 export const economiaCommands = [

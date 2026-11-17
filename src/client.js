@@ -47,6 +47,11 @@ export async function connect() {
   });
 
   sock.groupMetadataCache = new Map();
+  sock.lidToJid = new Map();
+
+  sock.ev.on('chats.phoneNumberShare', ({ lid, jid }) => {
+    if (lid && jid) sock.lidToJid.set(lid, jid);
+  });
 
   sock.ev.on('creds.update', () => {
     pendingCredsSave = pendingCredsSave.then(saveCreds).catch((error) => {

@@ -1,4 +1,5 @@
 import { formatDate, formatNumber, normalize, weekInfo } from '../utils.js';
+import { participantLabel } from '../participants.js';
 
 export const EVENTS = [
   {
@@ -131,7 +132,7 @@ export const eventoCommands = [
           `${formatNumber(entry.bank)} banco`
         ];
         if (entry.debt) parts.push(`-${formatNumber(entry.debt)} imposto`);
-        return `${medal} @${entry.jid.split('@')[0]} — *${formatNumber(entry.total)}* (${parts.join(', ')})`;
+        return `${medal} ${participantLabel(ctx, entry.jid)} — *${formatNumber(entry.total)}* (${parts.join(', ')})`;
       });
       const position = ctx.store.economyPosition(ctx.sender);
       return ctx.reply(

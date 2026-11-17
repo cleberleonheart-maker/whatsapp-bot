@@ -1,3 +1,5 @@
+import { participantLabel } from '../participants.js';
+
 const MEDALS = ['🥇', '🥈', '🥉'];
 
 function number(value, fallback = 0) {
@@ -5,8 +7,8 @@ function number(value, fallback = 0) {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-function label(entry) {
-  return entry.name || `@${String(entry.userId).split('@')[0]}`;
+function label(ctx, jid) {
+  return participantLabel(ctx, jid);
 }
 
 export const activityCommands = [
@@ -25,7 +27,7 @@ export const activityCommands = [
       if (!ranking.length) return ctx.reply('Ainda não há atividade registrada neste grupo.');
       const lines = ranking.map((entry, index) => {
         const medal = MEDALS[index] || `${index + 1}.`;
-        return `${medal} ${label(entry)} — ${entry.total} ações (${entry.messages} msg, ${entry.commands} cmd)`;
+        return `${medal} ${label(ctx, entry.userId)} — ${entry.total} ações (${entry.messages} msg, ${entry.commands} cmd)`;
       });
       return ctx.reply(`🏆 *Membros mais ativos*\n\n${lines.join('\n')}`);
     }
@@ -45,7 +47,7 @@ export const activityCommands = [
       const threshold = Math.min(100, Math.max(1, number(ctx.args[0], 5)));
       const members = ctx.store.inactiveMembers(ctx.jid, ctx.groupMembers || ctx.groupMetadata?.participants || [], threshold);
       if (!members.length) return ctx.reply('Nenhum membro abaixo desse limite.');
-      const lines = members.slice(0, 30).map((member) => `• @${String(member.id).split('@')[0]}`);
+      const lines = members.slice(0, 30).map((member) => `• ${label(ctx, member.id)}`);
       const extra = members.length > 30 ? `\n\n… e mais ${members.length - 30} membro(s).` : '';
       return ctx.reply(
         `😴 *Membros com menos de ${threshold} ações*\n\n${lines.join('\n')}${extra}`,
