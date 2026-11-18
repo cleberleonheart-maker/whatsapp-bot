@@ -16,15 +16,32 @@ import { handleMessage } from './handler.js';
 import { commands } from './commands/index.js';
 import { imageToSticker } from './commands/midia.js';
 import { sleep, jidToNumber, normalize } from './utils.js';
+import { acquireInstanceLock, releaseInstanceLock } from './instance-lock.js';
 
 const LINK_REGEX = /(https?:\/\/|www\.|chat\.whatsapp\.com|t\.me\/|youtu\.be\/|discord\.gg\/)/i;
 const BAD_WORDS = ['merda', 'bosta', 'caralho', 'porra', 'foda', 'fdp', 'filho da puta', 'cuzão', 'viado'];
 
 let reconnecting = false;
 let pendingCredsSave = Promise.resolve();
+let qrPending = false;
+const healthAlertLastAt = new Map();
 
 export async function flushSession() {
   await pendingCredsSave.catch(() => {});
+}
+
+async function sendHealthAlert(sock, text, key = text) {
+  if (!config.healthAlerts) return;
+  const jid = config.healthAlertJid || (config.ownerNumber ? `${config.ownerNumber}@s.whatsapp.net` : '');
+  if (!jid) return;
+  const now = Date.now();
+  if (now - (healthAlertLastAt.get(key) || 0) < 5 * 60 * 1000) return;
+  healthAlertLastAt.set(key, now);
+  try {
+    await sock.sendMessage(jid, { text: `[ALERTA] ${config.botName}: ${text}` });
+  } catch {
+    healthAlertLastAt.delete(key);
+  }
 }
 
 export async function connect() {
@@ -61,12 +78,17 @@ export async function connect() {
 
   sock.ev.on('connection.update', async ({ connection, lastDisconnect, qr }) => {
     if (qr) {
+      qrPending = true;
       console.log('');
       qrcode.generate(qr, { small: true });
       log.warn('Escaneie o QR Code com o WhatsApp (Aparelhos conectados).');
     }
     if (connection === 'open') {
       log.ok(`Conectado como ${jidToNumber(sock.user?.id) || 'desconhecido'}`);
+      if (qrPending) {
+        qrPending = false;
+        await sendHealthAlert(sock, 'Novo QR Code conectado com sucesso.', 'qr-connected');
+      }
       return;
     }
     if (connection === 'close') {
@@ -75,6 +97,7 @@ export async function connect() {
       log.warn(`Conexão fechada (${statusCode || 'motivo desconhecido'}).`);
 
       if (loggedOut) {
+        await sendHealthAlert(sock, 'Sessão desvinculada pelo WhatsApp.', 'logged-out');
         await flushSession();
         if (config.clearSessionOnLogout) {
           fs.rmSync(config.sessionDir, { recursive: true, force: true });
@@ -216,6 +239,14 @@ async function moderate(sock, msg, jid) {
 }
 
 export async function startBot() {
+  let releaseLock;
+  try {
+    releaseLock = acquireInstanceLock();
+  } catch (error) {
+    log.error(error.message);
+    throw error;
+  }
+
   store.startAutoSave();
   log.boot(`${config.botName} iniciando...`);
   log.info(`Prefixo: ${config.prefix} | Comandos: ${commands.length}`);
@@ -223,14 +254,23 @@ export async function startBot() {
   if (hasSession) log.ok('Sessão encontrada em auth_info/ — conectando sem QR Code.');
   else log.warn('Nenhuma sessão salva. Um QR Code será exibido na primeira conexão.');
 
+  let shuttingDown = false;
   const shutdown = async () => {
+    if (shuttingDown) return;
+    shuttingDown = true;
     log.warn('Encerrando e salvando sessão...');
     await flushSession();
     store.stop();
+    releaseLock();
     process.exit(0);
   };
   process.on('SIGINT', shutdown);
   process.on('SIGTERM', shutdown);
 
-  return connect();
+  try {
+    return await connect();
+  } catch (error) {
+    releaseLock();
+    throw error;
+  }
 }

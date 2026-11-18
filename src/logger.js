@@ -1,20 +1,35 @@
 import chalk from 'chalk';
+import { appendLog } from './log-file.js';
 
 const NOISY_SESSION_LOGS = [
   'Closing session:',
   'Opening session:',
   'Session already closed',
-  'Session already open'
+  'Session already open',
+  'Failed to decrypt message with any known session',
+  'Session error:'
 ];
+
+let suppressedSessionLogs = 0;
 
 export function isNoisySessionLog(...args) {
   return typeof args[0] === 'string' && NOISY_SESSION_LOGS.some((prefix) => args[0].startsWith(prefix));
 }
 
-for (const method of ['info', 'warn']) {
-  const original = console[method].bind(console);
+for (const method of ['log', 'info', 'warn', 'error', 'debug']) {
+  const original = console[method]?.bind(console);
+  if (!original) continue;
   console[method] = (...args) => {
-    if (isNoisySessionLog(...args)) return;
+    if (isNoisySessionLog(...args)) {
+      suppressedSessionLogs += 1;
+      if (suppressedSessionLogs % 100 === 0) {
+        const summary = `Erros internos de sessão suprimidos: ${suppressedSessionLogs}`;
+        appendLog(summary);
+        original(chalk.gray(`[    ] ${summary}`));
+      }
+      return;
+    }
+    appendLog(...args);
     original(...args);
   };
 }

@@ -7,6 +7,8 @@ test('logger filtra logs internos de sessão do libsignal', () => {
   assert.equal(isNoisySessionLog('Opening session:', {}), true);
   assert.equal(isNoisySessionLog('Session already closed', {}), true);
   assert.equal(isNoisySessionLog('Session already open'), true);
+  assert.equal(isNoisySessionLog('Failed to decrypt message with any known session...'), true);
+  assert.equal(isNoisySessionLog('Session error:Error: Bad MAC'), true);
   assert.equal(isNoisySessionLog('[INFO] Comando executado'), false);
   assert.equal(isNoisySessionLog('Mensagem normal'), false);
 });

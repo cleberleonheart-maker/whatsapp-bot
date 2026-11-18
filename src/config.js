@@ -36,6 +36,13 @@ export const config = {
   ocrApiKey: process.env.OCR_API_KEY || 'helloworld',
   clearSessionOnLogout: bool(process.env.CLEAR_SESSION_ON_LOGOUT, false),
   ytdlpBin: process.env.YTDLP_BIN || '',
+  instanceLockFile: path.resolve(process.cwd(), process.env.INSTANCE_LOCK_FILE || './data/runtime/bot.lock'),
+  logToFile: bool(process.env.LOG_TO_FILE, true),
+  logFile: path.resolve(process.cwd(), process.env.LOG_FILE || './data/runtime/bot.log'),
+  logMaxBytes: int(process.env.LOG_MAX_BYTES, 5 * 1024 * 1024),
+  logMaxFiles: int(process.env.LOG_MAX_FILES, 5),
+  healthAlerts: bool(process.env.HEALTH_ALERTS, true),
+  healthAlertJid: process.env.HEALTH_ALERT_JID || '',
 };
 
 export const prefixes = [config.prefix, ...config.altPrefixes];

@@ -32,6 +32,24 @@ Na primeira execução, um QR Code aparece no terminal. Abra o WhatsApp → **Ap
 
 > `npm start` usa um launcher que detecta automaticamente um Node 20+ local (instalado em `~/.node20` neste ambiente). Em outra máquina, instale o Node 20 com `nvm install 20 && nvm use 20`.
 
+## Estabilidade
+
+O bot cria um lock em `data/runtime/bot.lock` e impede que duas instâncias usem a mesma sessão ao mesmo tempo. Se uma instância travar sem liberar o lock, o PID é validado e um lock órfão é removido automaticamente na próxima inicialização.
+
+Para reiniciar com segurança, use `npm stop && npm start`. O `npm stop` encerra o launcher e o processo filho `index.js`, evitando processos órfãos que ainda usam a sessão.
+
+Os logs são salvos em `data/runtime/bot.log` com rotação automática (5 MB por arquivo, 5 arquivos). Logs internos repetitivos do libsignal são resumidos a cada 100 ocorrências para não poluir o terminal.
+
+Para rodar com reinício automático, instale o PM2 e use:
+
+```bash
+npm install -g pm2
+npm run pm2:start
+npm run pm2:logs
+```
+
+O `ecosystem.config.cjs` já define uma única instância, `autorestart`, limite de memória e reinício após queda. Sem PM2, continue usando `npm start`.
+
 ## Comandos
 
 Prefixo padrão: `!` (alternativo: `/`). Use `!ajuda` para abrir o menu em caixa estilo Ted Bot, agrupado por categoria.
@@ -167,7 +185,7 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 
 ## Configuração (.env)
 
-Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`.
+Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`.
 
 ## Docker
 
@@ -189,6 +207,8 @@ npm test
 - **Erro de sintaxe ao iniciar**: verifique se você usa Node 20+ (`node -v`).
 - **Comandos não respondem**: confira o prefixo no `.env` e se o número está em `OWNER_NUMBER` para comandos de admin.
 - **Figurinha indisponível**: instale o pacote opcional com `npm install sharp@0.32.6`.
+- **"Já existe outra instância rodando"**: rode `npm stop && npm start` ou use `npm run pm2:restart`. Não inicie `npm start` e `pm2` ao mesmo tempo.
+- **Quer ver os logs completos**: use `tail -f data/runtime/bot.log` ou `npm run pm2:logs`.
 
 ## Aviso
 
