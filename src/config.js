@@ -43,6 +43,7 @@ export const config = {
   logMaxFiles: int(process.env.LOG_MAX_FILES, 5),
   healthAlerts: bool(process.env.HEALTH_ALERTS, true),
   healthAlertJid: process.env.HEALTH_ALERT_JID || '',
+  logSessionErrors: bool(process.env.LOG_SESSION_ERRORS, false),
 };
 
 export const prefixes = [config.prefix, ...config.altPrefixes];

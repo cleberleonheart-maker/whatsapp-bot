@@ -17,6 +17,7 @@ import { commands } from './commands/index.js';
 import { imageToSticker } from './commands/midia.js';
 import { sleep, jidToNumber, normalize } from './utils.js';
 import { acquireInstanceLock, releaseInstanceLock } from './instance-lock.js';
+import { pruneSessionWrites } from './session-prune.js';
 
 const LINK_REGEX = /(https?:\/\/|www\.|chat\.whatsapp\.com|t\.me\/|youtu\.be\/|discord\.gg\/)/i;
 const BAD_WORDS = ['merda', 'bosta', 'caralho', 'porra', 'foda', 'fdp', 'filho da puta', 'cuzão', 'viado'];
@@ -46,6 +47,7 @@ async function sendHealthAlert(sock, text, key = text) {
 
 export async function connect() {
   const { state, saveCreds } = await useMultiFileAuthState(config.sessionDir);
+  pruneSessionWrites(state.keys);
   const { version, isLatest } = await fetchLatestBaileysVersion();
   log.boot(`Versão do WhatsApp: ${version.join('.')} ${isLatest ? '(atual)' : '(desatualizada)'}`);
 

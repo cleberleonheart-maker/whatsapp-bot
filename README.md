@@ -40,6 +40,8 @@ Para reiniciar com segurança, use `npm stop && npm start`. O `npm stop` encerra
 
 Os logs são salvos em `data/runtime/bot.log` com rotação automática (5 MB por arquivo, 5 arquivos). Logs internos repetitivos do libsignal são resumidos a cada 100 ocorrências para não poluir o terminal.
 
+Se aparecerem muitos erros `Bad MAC` ou `MessageCounterError`, pare o bot e use `npm run prune:sessions -- --dry-run` para simular a limpeza. O comando real, `npm run prune:sessions`, copia `auth_info/` para `data/auth-backups/` e mantém apenas a sessão aberta mais recente de cada arquivo, dispensando um novo QR Code. Para podar um arquivo específico, use `npm run prune:sessions -- session-6438793568280.0.json`. Se os erros voltarem logo após a poda, inicie com `LOG_SESSION_ERRORS=true npm start` para registrar os stacks completos em `bot.log` e identificar o JID responsável.
+
 Para rodar com reinício automático, instale o PM2 e use:
 
 ```bash
@@ -132,6 +134,7 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 | Comando | Descrição |
 |---|---|
 | `!figurinha` | Imagem → figurinha (requer `npm i sharp@0.32.6`) |
+| `!attp <texto>` | Figurinha animada com texto colorido piscando (ffmpeg) |
 | `!figurinhaanimada` | Vídeo/GIF → figurinha animada (ffmpeg) |
 | `!meme Topo\|Base` | Gerar imagem com texto |
 | `!ocr` | Extrair texto de imagem (OCR.Space) |
@@ -185,7 +188,7 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 
 ## Configuração (.env)
 
-Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`.
+Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `LOG_SESSION_ERRORS`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`.
 
 ## Docker
 

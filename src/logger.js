@@ -1,11 +1,14 @@
 import chalk from 'chalk';
 import { appendLog } from './log-file.js';
+import { config } from './config.js';
 
 const NOISY_SESSION_LOGS = [
   'Closing session:',
   'Opening session:',
   'Session already closed',
   'Session already open',
+  'Removing old closed session:',
+  'Closing open session in favor of incoming prekey bundle',
   'Failed to decrypt message with any known session',
   'Session error:'
 ];
@@ -20,7 +23,7 @@ for (const method of ['log', 'info', 'warn', 'error', 'debug']) {
   const original = console[method]?.bind(console);
   if (!original) continue;
   console[method] = (...args) => {
-    if (isNoisySessionLog(...args)) {
+    if (isNoisySessionLog(...args) && !config.logSessionErrors) {
       suppressedSessionLogs += 1;
       if (suppressedSessionLogs % 100 === 0) {
         const summary = `Erros internos de sessão suprimidos: ${suppressedSessionLogs}`;
