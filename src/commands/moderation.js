@@ -25,6 +25,10 @@ function listMembers(ctx) {
   return ctx.groupMembers || ctx.groupMetadata?.participants || [];
 }
 
+function restAfterAction(ctx) {
+  return String(ctx.text || '').replace(/^\S+\s*/, '').trim();
+}
+
 export const moderationCommands = [
   {
     name: 'autoresposta',
@@ -156,6 +160,101 @@ export const moderationCommands = [
       if (!current) return ctx.reply(`${mention(target)} não tem advertências.`, { mentions: [target] });
       group.warnings[target] = current - 1;
       return ctx.reply(`${mention(target)} agora tem ${group.warnings[target]} advertência(s).`, { mentions: [target] });
+    }
+  },
+  {
+    name: 'advertencias',
+    aliases: ['avisos', 'warnings', 'warnlist'],
+    category: 'Administração',
+    description: 'Listar advertências registradas no grupo',
+    usage: '!advertencias',
+    groupOnly: true,
+    run(ctx) {
+      const group = ctx.store.group(ctx.jid);
+      const entries = Object.entries(group.warnings || {}).filter(([, count]) => count > 0);
+      if (!ctx.isAdmin && !ctx.isOwner) {
+        const own = entries.find(([jid]) => jid === ctx.sender);
+        if (!own) return ctx.reply('Você não tem advertências registradas.');
+        return ctx.reply(`⚠️ Você tem ${own[1]} advertência(s).`);
+      }
+      if (!entries.length) return ctx.reply('Nenhuma advertência registrada neste grupo.');
+      return ctx.reply(`⚠️ *Advertências do grupo*\n\n${entries.map(([jid, count], index) => `${index + 1}. ${mention(jid)} — ${count}`).join('\n')}`, {
+        mentions: entries.map(([jid]) => jid)
+      });
+    }
+  },
+  {
+    name: 'regras',
+    aliases: ['regra', 'rules'],
+    category: 'Administração',
+    description: 'Listar ou editar as regras do grupo',
+    usage: '!regras | !regras add texto | !regras del número',
+    groupOnly: true,
+    run(ctx) {
+      const group = ctx.store.group(ctx.jid);
+      group.rules = group.rules || [];
+      const action = normalize(ctx.args[0] || 'list');
+      if (action === 'list') {
+        if (!group.rules.length) return ctx.reply('Este grupo ainda não tem regras cadastradas.');
+        return ctx.reply(`📜 *Regras do grupo*\n\n${group.rules.map((rule, index) => `${index + 1}. ${rule}`).join('\n')}`);
+      }
+      if (!ctx.isAdmin && !ctx.isOwner) return ctx.reply('Apenas administradores podem editar as regras.');
+      if (action === 'add' || action === 'set') {
+        const rule = restAfterAction(ctx).slice(0, 300);
+        if (!rule) return ctx.reply('Informe o texto da regra.');
+        group.rules.push(rule);
+        return ctx.reply(`Regra ${group.rules.length} adicionada.`);
+      }
+      if (action === 'del' || action === 'remove') {
+        const index = Number(ctx.args[1]) - 1;
+        if (!Number.isInteger(index) || index < 0 || index >= group.rules.length) return ctx.reply('Número de regra inválido.');
+        const [removed] = group.rules.splice(index, 1);
+        return ctx.reply(`Regra removida: ${removed}`);
+      }
+      if (action === 'clear') {
+        group.rules = [];
+        return ctx.reply('Regras apagadas.');
+      }
+      return ctx.reply(`Use: \`${ctx.prefix}regras\`, \`${ctx.prefix}regras add texto\` ou \`${ctx.prefix}regras del número\`.`);
+    }
+  },
+  {
+    name: 'palavrao',
+    aliases: ['palavroes', 'palavrasproibidas', 'customwords'],
+    category: 'Administração',
+    description: 'Gerenciar palavras proibidas personalizadas',
+    usage: '!palavrao add palavra | !palavrao del palavra | !palavrao list',
+    groupOnly: true,
+    adminOnly: true,
+    run(ctx) {
+      const group = ctx.store.group(ctx.jid);
+      group.customBadWords = group.customBadWords || [];
+      const action = normalize(ctx.args[0] || 'list');
+      if (action === 'list') {
+        const words = group.customBadWords;
+        return ctx.reply(
+          `🚫 Palavras personalizadas (${words.length})\nFiltro: ${status(group.filter)}` +
+          (words.length ? `\n\n${words.map((word, index) => `${index + 1}. ${word}`).join('\n')}` : '')
+        );
+      }
+      const word = restAfterAction(ctx).toLocaleLowerCase('pt-BR').slice(0, 60);
+      if (action === 'add') {
+        if (!word) return ctx.reply('Informe a palavra ou expressão.');
+        if (group.customBadWords.includes(word)) return ctx.reply('Essa palavra já está na lista.');
+        group.customBadWords.push(word);
+        return ctx.reply(`Palavra adicionada: ${word}`);
+      }
+      if (action === 'del') {
+        const index = group.customBadWords.indexOf(word);
+        if (index < 0) return ctx.reply('Palavra não encontrada.');
+        group.customBadWords.splice(index, 1);
+        return ctx.reply(`Palavra removida: ${word}`);
+      }
+      if (action === 'clear') {
+        group.customBadWords = [];
+        return ctx.reply('Lista de palavras personalizadas apagada.');
+      }
+      return ctx.reply(`Use: \`${ctx.prefix}palavrao add palavra\`, \`${ctx.prefix}palavrao del palavra\` ou \`${ctx.prefix}palavrao list\`.`);
     }
   },
   {

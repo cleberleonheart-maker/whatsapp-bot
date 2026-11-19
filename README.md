@@ -61,6 +61,7 @@ O menu aceita `!ajuda <nº>`, `!ajuda <categoria>` (ex.: `!ajuda Jogos`) e `!aju
 | Comando | Descrição |
 |---|---|
 | `!ajuda [categoria]` | Lista comandos (ex: `!ajuda Jogos`) |
+| `!infogrupo` | Nome, descrição, admins e participantes do grupo |
 | `!ping` | Testa se o bot está online |
 | `!status` | Uptime, mensagens, usuários e líder do ranking |
 
@@ -133,7 +134,6 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 ### Mídia
 | Comando | Descrição |
 |---|---|
-| `!figurinha` | Imagem → figurinha (requer `npm i sharp@0.32.6`) |
 | `!attp <texto>` | Figurinha animada com texto colorido piscando (ffmpeg) |
 | `!figurinhaanimada` | Vídeo/GIF → figurinha animada (ffmpeg) |
 | `!meme Topo\|Base` | Gerar imagem com texto |
@@ -147,11 +147,12 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 | `!calc (2+3)*4` | Calculadora segura (sem `eval`) |
 | `!senha 16` | Gerador de senhas |
 | `!cep 01001-000` | Consulta ViaCEP |
-| `!clima São Paulo` | Clima atual (Open-Meteo) |
+| `!clima São Paulo` ou `!clima Alvorada RS` | Clima atual (Open-Meteo) |
 | `!wiki Brasil` | Resumo da Wikipédia |
 | `!traduzir pt=en olá` | Tradução (MyMemory) |
 | `!moeda 100 BRL USD` | Conversão de moedas (Frankfurter) |
 | `!horario [cidade]` | Hora em várias cidades |
+| `!figurinha` | Imagem → figurinha (requer pacote `sharp`) |
 | `!lembrete 10m tomar água` | Lembrete no chat |
 
 ### Social
@@ -177,6 +178,9 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 | `!autofigu on\|off` | Converter imagens em figurinhas automaticamente |
 | `!mute`, `!unmute` | Silenciar/liberar membro |
 | `!advertir`, `!tiraradvertencia` | Controle de advertências |
+| `!advertencias` | Listar advertências registradas |
+| `!regras`, `!regras add texto`, `!regras del número` | Regras do grupo |
+| `!palavrao add\|del\|list` | Palavras proibidas personalizadas |
 | `!blacklist add\|del\|list` | Lista negra do grupo |
 | `!promover`, `!rebaixar` | Gerenciar administradores |
 | `!fixar`, `!desfixar` | Fixar/desfixar mensagem respondida |

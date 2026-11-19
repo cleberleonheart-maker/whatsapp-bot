@@ -178,6 +178,35 @@ export const infoCommands = [
     }
   },
   {
+    name: 'infogrupo',
+    aliases: ['grupoinfo', 'groupinfo', 'infodogrupo'],
+    category: 'Informação',
+    description: 'Mostrar informações do grupo',
+    usage: '!infogrupo',
+    groupOnly: true,
+    async run(ctx) {
+      let metadata = ctx.groupMetadata;
+      if (!metadata && typeof ctx.sock.groupMetadata === 'function') {
+        try { metadata = await ctx.sock.groupMetadata(ctx.jid); } catch {}
+      }
+      if (!metadata) return ctx.reply('Não consegui carregar as informações do grupo.');
+      const participants = metadata.participants || [];
+      const adminJids = participants.filter((member) => member.admin).map((member) => member.id).slice(0, 12);
+      const label = (jid) => `@${String(jid).split('@')[0]}`;
+      const created = metadata.creation ? formatDate(new Date(metadata.creation * 1000), ctx.config.timezone) : '—';
+      return ctx.reply(
+        `ℹ️ *Informações do grupo*\n\n` +
+        `📌 Nome: ${metadata.subject || '—'}\n` +
+        `📝 Descrição: ${metadata.desc || '—'}\n` +
+        `👥 Participantes: ${participants.length}\n` +
+        `🛡️ Admins: ${adminJids.length ? adminJids.map(label).join(', ') : '—'}\n` +
+        `👑 Dono: ${metadata.owner ? label(metadata.owner) : '—'}\n` +
+        `📅 Criado: ${created}`,
+        { mentions: [...new Set([...adminJids, metadata.owner].filter(Boolean))] }
+      );
+    }
+  },
+  {
     name: 'ping',
     aliases: ['pong', 'latencia'],
     category: 'Informação',

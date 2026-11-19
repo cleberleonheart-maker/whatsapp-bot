@@ -15,12 +15,11 @@ import { log } from './logger.js';
 import { handleMessage } from './handler.js';
 import { commands } from './commands/index.js';
 import { imageToSticker } from './commands/midia.js';
-import { sleep, jidToNumber, normalize } from './utils.js';
+import { sleep, jidToNumber, normalize, matchesBadWord } from './utils.js';
 import { acquireInstanceLock, releaseInstanceLock } from './instance-lock.js';
 import { pruneSessionWrites } from './session-prune.js';
 
 const LINK_REGEX = /(https?:\/\/|www\.|chat\.whatsapp\.com|t\.me\/|youtu\.be\/|discord\.gg\/)/i;
-const BAD_WORDS = ['merda', 'bosta', 'caralho', 'porra', 'foda', 'fdp', 'filho da puta', 'cuzão', 'viado'];
 
 let reconnecting = false;
 let pendingCredsSave = Promise.resolve();
@@ -265,7 +264,7 @@ async function moderate(sock, msg, jid) {
   const isMuted = group.muted?.includes(sender);
   const isBlacklisted = group.blacklist?.includes(sender);
   const hasLink = group.antilink && LINK_REGEX.test(text) && !linkIsAllowed(text, group.allowedDomains);
-  const hasBadWord = group.filter && BAD_WORDS.some((word) => new RegExp(`\\b${word}\\b`, 'i').test(text));
+  const hasBadWord = group.filter && matchesBadWord(group, text);
   if (!isMuted && !isBlacklisted && !hasLink && !hasBadWord) return false;
 
   let reason = 'Você está silenciado neste grupo.';

@@ -13,6 +13,7 @@ import { midiaCommands } from './midia.js';
 import { playCommands } from './play.js';
 import { bancoCommands } from './banco.js';
 import { eventoCommands } from './eventos.js';
+import { normalize } from '../utils.js';
 
 export const commands = [
   ...infoCommands,
@@ -35,10 +36,10 @@ export const commands = [
 const index = new Map();
 for (const command of commands) {
   for (const name of [command.name, ...(command.aliases || [])]) {
-    index.set(name.toLowerCase(), command);
+    index.set(normalize(name), command);
   }
 }
 
 export function findCommand(name) {
-  return index.get(String(name || '').toLowerCase()) || null;
+  return index.get(normalize(name)) || null;
 }

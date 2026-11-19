@@ -53,6 +53,8 @@ const GROUP_DEFAULTS = {
   muted: [],
   warnings: {},
   blacklist: [],
+  rules: [],
+  customBadWords: [],
   cooldown: config.cooldown
 };
 
@@ -63,7 +65,9 @@ function cloneGroupDefaults() {
     allowedDomains: [],
     muted: [],
     warnings: {},
-    blacklist: []
+    blacklist: [],
+    rules: [],
+    customBadWords: []
   };
 }
 

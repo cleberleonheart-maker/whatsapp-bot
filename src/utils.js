@@ -1,5 +1,16 @@
 import crypto from 'node:crypto';
 
+const BAD_WORDS = ['merda', 'bosta', 'caralho', 'porra', 'foda', 'fdp', 'filho da puta', 'cuzão', 'viado'];
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function matchesBadWord(group, text) {
+  const badWords = [...BAD_WORDS, ...(group?.customBadWords || [])];
+  return badWords.some((word) => new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRegExp(word)}($|[^\\p{L}\\p{N}])`, 'iu').test(String(text || '')));
+}
+
 export const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
 export const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
