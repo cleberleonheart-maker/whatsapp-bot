@@ -9,7 +9,7 @@ import makeWASocket, {
 } from '@whiskeysockets/baileys';
 import pino from 'pino';
 import qrcode from 'qrcode-terminal';
-import { config } from './config.js';
+import { config, prefixes } from './config.js';
 import { store } from './store.js';
 import { log } from './logger.js';
 import { handleMessage } from './handler.js';
@@ -65,6 +65,23 @@ export async function connect() {
     defaultQueryTimeoutMs: 60000
   });
 
+  const ownMessageIds = new Set();
+  const originalSendMessage = sock.sendMessage.bind(sock);
+  sock.sendMessage = async (...args) => {
+    const result = await originalSendMessage(...args);
+    const id = result?.key?.id;
+    if (id) {
+      ownMessageIds.add(id);
+      if (ownMessageIds.size > 500) {
+        ownMessageIds.delete(ownMessageIds.values().next().value);
+      }
+    }
+    return result;
+  };
+
+  let pairingRequested = false;
+  const needsPairing = config.pairingPhone && !state.creds.registered;
+
   sock.groupMetadataCache = new Map();
   sock.lidToJid = new Map();
 
@@ -81,9 +98,23 @@ export async function connect() {
   sock.ev.on('connection.update', async ({ connection, lastDisconnect, qr }) => {
     if (qr) {
       qrPending = true;
-      console.log('');
-      qrcode.generate(qr, { small: true });
-      log.warn('Escaneie o QR Code com o WhatsApp (Aparelhos conectados).');
+      if (config.pairingPhone) {
+        if (needsPairing && !pairingRequested && !state.creds.pairingCode) {
+          pairingRequested = true;
+          await sleep(3000);
+          try {
+            const code = await sock.requestPairingCode(config.pairingPhone);
+            log.warn(`Código de pareamento: ${code}`);
+          } catch (error) {
+            pairingRequested = false;
+            log.error(`Falha ao gerar código de pareamento: ${error.message}`);
+          }
+        }
+      } else {
+        console.log('');
+        qrcode.generate(qr, { small: true });
+        log.warn('Escaneie o QR Code com o WhatsApp (Aparelhos conectados).');
+      }
     }
     if (connection === 'open') {
       log.ok(`Conectado como ${jidToNumber(sock.user?.id) || 'desconhecido'}`);
@@ -146,11 +177,23 @@ export async function connect() {
   sock.ev.on('messages.upsert', async ({ messages, type }) => {
     if (type !== 'notify' && type !== 'append') return;
     for (const msg of messages || []) {
-      if (!msg?.message || msg.key?.fromMe) continue;
+      if (!msg?.message) continue;
+      if (msg.key?.fromMe) {
+        const id = msg.key.id;
+        if (ownMessageIds.has(id)) {
+          ownMessageIds.delete(id);
+          continue;
+        }
+        const text = messageText(msg).trim();
+        if (!prefixes.some((prefix) => text.startsWith(prefix))) continue;
+      }
       if (config.autoRead && typeof sock.readMessages === 'function') {
         sock.readMessages([msg.key]).catch(() => {});
       }
       const jid = msg.key.remoteJid;
+      if (config.logIncomingMessages) {
+        log.dim(`MSG ${jid} ${msg.key?.participant || ''} :: ${messageText(msg).slice(0, 160)}`);
+      }
       if (jid?.endsWith('@g.us') && !sock.groupMetadataCache.has(jid)) {
         sock.groupMetadata(jid)
           .then((metadata) => sock.groupMetadataCache.set(jid, metadata))

@@ -35,6 +35,7 @@ export const config = {
   maxReconnects: int(process.env.MAX_RECONNECTS, 0),
   ocrApiKey: process.env.OCR_API_KEY || 'helloworld',
   clearSessionOnLogout: bool(process.env.CLEAR_SESSION_ON_LOGOUT, false),
+  pairingPhone: process.env.PAIRING_PHONE || '',
   ytdlpBin: process.env.YTDLP_BIN || '',
   instanceLockFile: path.resolve(process.cwd(), process.env.INSTANCE_LOCK_FILE || './data/runtime/bot.lock'),
   logToFile: bool(process.env.LOG_TO_FILE, true),
@@ -44,6 +45,7 @@ export const config = {
   healthAlerts: bool(process.env.HEALTH_ALERTS, true),
   healthAlertJid: process.env.HEALTH_ALERT_JID || '',
   logSessionErrors: bool(process.env.LOG_SESSION_ERRORS, false),
+  logIncomingMessages: bool(process.env.LOG_INCOMING_MESSAGES, false),
 };
 
 export const prefixes = [config.prefix, ...config.altPrefixes];

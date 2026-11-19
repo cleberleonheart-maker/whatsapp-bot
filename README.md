@@ -28,7 +28,7 @@ python3 -m pip install --user --break-system-packages yt-dlp
 
 O bot detecta `~/.local/bin/yt-dlp` automaticamente. Se preferir fixar outro caminho, defina `YTDLP_BIN` no `.env`.
 
-Na primeira execução, um QR Code aparece no terminal. Abra o WhatsApp → **Aparelhos conectados** → **Conectar aparelho** e escaneie. A sessão fica salva em `auth_info/` e as configurações em `data/runtime/`.
+Na primeira execução, um QR Code aparece no terminal. Abra o WhatsApp → **Aparelhos conectados** → **Conectar aparelho** e escaneie. A sessão fica salva em `auth_info/` e as configurações em `data/runtime/`. Se preferir um código curto de 8 caracteres, defina `PAIRING_PHONE` no `.env` com o número do WhatsApp (somente dígitos, com DDI); o bot exibe o código no terminal e você usa **Conectar com número de telefone**.
 
 > `npm start` usa um launcher que detecta automaticamente um Node 20+ local (instalado em `~/.node20` neste ambiente). Em outra máquina, instale o Node 20 com `nvm install 20 && nvm use 20`.
 
@@ -188,7 +188,7 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 
 ## Configuração (.env)
 
-Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `LOG_SESSION_ERRORS`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`.
+Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `LOG_SESSION_ERRORS`, `LOG_INCOMING_MESSAGES`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`.
 
 ## Docker
 

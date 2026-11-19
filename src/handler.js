@@ -56,7 +56,7 @@ function buildContext(sock, msg, store, registry) {
 }
 
 export async function handleMessage(sock, msg, store, registry) {
-  if (!msg?.message || msg.key?.fromMe || msg.key?.remoteJid === 'status@broadcast') return;
+  if (!msg?.message || msg.key?.remoteJid === 'status@broadcast') return;
   if (/bot|broadcast/i.test(msg.key?.participant || '')) return;
 
   const ctx = buildContext(sock, msg, store, registry);
@@ -64,6 +64,7 @@ export async function handleMessage(sock, msg, store, registry) {
 
   try {
     const hasPrefix = prefixes.some((prefix) => ctx.body.trim().startsWith(prefix));
+    if (msg.key?.fromMe && !hasPrefix) return;
     if (!hasPrefix) {
       store.trackActivity?.(ctx.jid, ctx.sender, ctx.msg.pushName, 'message');
       const handled = handleGameMessage(ctx) ||
@@ -81,7 +82,10 @@ export async function handleMessage(sock, msg, store, registry) {
     ctx.args = ctx.text.split(/\s+/).filter(Boolean);
 
     const command = findCommand(ctx.commandName);
-    if (!command) return;
+    if (!command) {
+      if (config.logIncomingMessages) log.dim(`Comando desconhecido: ${ctx.commandName}`);
+      return;
+    }
 
     if (command.groupOnly && !ctx.isGroup) return ctx.reply('Este comando só funciona em grupos.');
     if (command.adminOnly && !ctx.isAdmin && !ctx.isOwner) {
