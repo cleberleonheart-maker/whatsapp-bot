@@ -1,6 +1,8 @@
-# BrincaBot 🤖
+# Fênix 🔥
 
 Bot de WhatsApp completo feito com [Baileys](https://github.com/WhiskeySockets/Baileys): piadas, jogos, utilidades, sistema de XP e moderação de grupos. Não precisa de navegador nem de API paga.
+
+Logo: `assets/fenix-logo.png` (aplicada automaticamente ao perfil do bot ao conectar).
 
 ## Requisitos
 
@@ -8,7 +10,7 @@ Bot de WhatsApp completo feito com [Baileys](https://github.com/WhiskeySockets/B
 - WhatsApp ativo no celular para escanear o QR Code
 - **ffmpeg** (opcional): figurinhas animadas, gerador de memes e `!play`/`!playvid`
 - **yt-dlp** (opcional): áudio/vídeo do YouTube em `!play`/`!playvid`
-- **sharp** (opcional): figurinhas estáticas — `npm install sharp@0.32.6`
+- **sharp** (opcional): figurinhas estáticas e geração da logo — `npm install sharp`
 
 ## Instalação
 
@@ -192,7 +194,7 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 
 ## Configuração (.env)
 
-Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `LOG_SESSION_ERRORS`, `LOG_INCOMING_MESSAGES`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`, `YTDLP_BIN`, `VIDEO_LIMIT_SECONDS`.
+Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `BOT_DESCRIPTION`, `BOT_LOGO`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `LOG_SESSION_ERRORS`, `LOG_INCOMING_MESSAGES`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`, `YTDLP_BIN`, `VIDEO_LIMIT_SECONDS`.
 
 ## Docker
 

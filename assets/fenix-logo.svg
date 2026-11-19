@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="72%">
+      <stop offset="0%" stop-color="#2b0a12"/>
+      <stop offset="55%" stop-color="#120611"/>
+      <stop offset="100%" stop-color="#05050b"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffb300" stop-opacity="0.75"/>
+      <stop offset="45%" stop-color="#ff4d00" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ff4d00" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="wing" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8b0000"/>
+      <stop offset="35%" stop-color="#ff3d00"/>
+      <stop offset="70%" stop-color="#ff8f00"/>
+      <stop offset="100%" stop-color="#ffe082"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff3b0"/>
+      <stop offset="35%" stop-color="#ffb300"/>
+      <stop offset="75%" stop-color="#ff3d00"/>
+      <stop offset="100%" stop-color="#7f0000"/>
+    </linearGradient>
+    <linearGradient id="tail" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd54a"/>
+      <stop offset="50%" stop-color="#ff5a00"/>
+      <stop offset="100%" stop-color="#5c0000" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <circle cx="512" cy="455" r="350" fill="url(#halo)"/>
+  <g filter="url(#glow)">
+    <path d="M512 690 C455 635 392 605 320 596 C370 566 399 532 410 486 C350 516 284 516 222 476 C300 465 351 425 390 366 C310 376 240 346 184 286 C300 306 390 296 470 246 C489 214 500 180 512 142 C524 180 535 214 554 246 C634 296 724 306 840 286 C784 346 714 376 634 366 C673 425 724 465 802 476 C740 516 674 516 614 486 C625 532 654 566 704 596 C632 605 569 635 512 690 Z" fill="url(#wing)"/>
+    <path d="M512 690 C470 760 438 832 414 928 C468 880 500 838 512 786 C524 838 556 880 610 928 C586 832 554 760 512 690 Z" fill="url(#tail)"/>
+    <path d="M512 238 C486 288 479 372 499 456 C468 526 448 612 512 744 C576 612 556 526 525 456 C545 372 538 288 512 238 Z" fill="url(#body)"/>
+    <path d="M512 178 C496 214 494 242 512 268 C530 242 528 214 512 178 Z" fill="#ffd54a"/>
+    <path d="M474 206 C470 242 482 270 512 292 C542 270 554 242 550 206 C535 232 525 244 512 252 C499 244 489 232 474 206 Z" fill="#ff7a00"/>
+    <circle cx="512" cy="282" r="42" fill="#ffe082"/>
+    <path d="M512 262 L566 286 L512 308 Z" fill="#ffb300"/>
+  </g>
+  <rect x="262" y="832" width="500" height="132" rx="66" fill="#07060c" fill-opacity="0.82"/>
+  <text x="512" y="918" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="92" letter-spacing="10" fill="#ffd54a" stroke="#7f0000" stroke-width="3">FÊNIX</text>
+</svg>

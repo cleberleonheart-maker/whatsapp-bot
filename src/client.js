@@ -44,6 +44,24 @@ async function sendHealthAlert(sock, text, key = text) {
   }
 }
 
+async function syncBotProfile(sock) {
+  try {
+    if (typeof sock.updateProfileName === 'function' && config.botName) {
+      await sock.updateProfileName(config.botName);
+      log.dim(`Nome do perfil: ${config.botName}`);
+    }
+  } catch (error) {
+    log.warn(`Não foi possível atualizar o nome do perfil: ${error.message}`);
+  }
+  if (!config.botLogo || !fs.existsSync(config.botLogo)) return;
+  try {
+    await sock.updateProfilePicture(sock.user?.id, fs.readFileSync(config.botLogo));
+    log.dim(`Logo aplicada: ${config.botLogo}`);
+  } catch (error) {
+    log.warn(`Não foi possível aplicar a logo: ${error.message}`);
+  }
+}
+
 export async function connect() {
   const { state, saveCreds } = await useMultiFileAuthState(config.sessionDir);
   pruneSessionWrites(state.keys);
@@ -117,6 +135,7 @@ export async function connect() {
     }
     if (connection === 'open') {
       log.ok(`Conectado como ${jidToNumber(sock.user?.id) || 'desconhecido'}`);
+      await syncBotProfile(sock);
       if (qrPending) {
         qrPending = false;
         await sendHealthAlert(sock, 'Novo QR Code conectado com sucesso.', 'qr-connected');
