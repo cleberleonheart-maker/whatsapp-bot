@@ -7,7 +7,7 @@ import { config } from '../config.js';
 
 const exec = promisify(execFile);
 const AUDIO_LIMIT = 600;
-const VIDEO_LIMIT = 180;
+export const VIDEO_LIMIT = Math.max(1, config.videoLimitSeconds || 600);
 
 function resolvePath(value) {
   const expanded = String(value).replace(/^~(?=\/)/, os.homedir());
@@ -62,6 +62,17 @@ function findDownloaded(directory, video) {
   return files[0] || null;
 }
 
+async function normalizeVideo(file, directory) {
+  const output = path.join(directory, 'whatsapp.mp4');
+  await exec('ffmpeg', [
+    '-hide_banner', '-loglevel', 'error', '-y', '-i', file,
+    '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '28',
+    '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '96k',
+    '-movflags', '+faststart', '-max_muxing_queue_size', '1024', output
+  ], { timeout: 300000, maxBuffer: 1024 * 1024 });
+  return output;
+}
+
 async function download(query, video) {
   const { url, duration } = await resolveUrl(query);
   if (video && duration && duration > VIDEO_LIMIT) throw new Error(`Vídeo com ${Math.round(duration)}s excede o limite de ${VIDEO_LIMIT}s`);
@@ -82,12 +93,13 @@ async function download(query, video) {
   }
   args.push(url);
   try {
-    await exec(resolveYtDlp(), args, { timeout: video ? 240000 : 180000, maxBuffer: 1024 * 1024 });
-    const file = findDownloaded(directory, video);
+    await exec(resolveYtDlp(), args, { timeout: video ? Math.min(600000, VIDEO_LIMIT * 1000 + 120000) : 180000, maxBuffer: 1024 * 1024 });
+    let file = findDownloaded(directory, video);
     if (!file) throw new Error('Nenhum arquivo baixado');
+    if (video) file = await normalizeVideo(file, directory);
     const buffer = fs.readFileSync(file);
     if (!buffer.length) throw new Error('Arquivo vazio');
-    return { buffer, name: path.basename(file) };
+    return { buffer, name: video ? 'video.mp4' : path.basename(file) };
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }
@@ -143,7 +155,7 @@ export const playCommands = [
     name: 'playvid',
     aliases: ['ytv', 'video'],
     category: 'Mídia',
-    description: 'Baixar vídeo curto do YouTube por nome ou URL',
+    description: 'Baixar vídeo do YouTube por nome ou URL',
     usage: '!playvid nome do vídeo ou URL',
     async run(ctx) {
       const query = ctx.text.trim();
@@ -159,7 +171,7 @@ export const playCommands = [
         }, { quoted: ctx.msg });
         return ctx.react?.('✅');
       } catch (error) {
-        return ctx.reply(`Não consegui baixar o vídeo. Use um vídeo curto (até ${VIDEO_LIMIT}s) ou tente outra busca. ${errorText(error)}`);
+        return ctx.reply(`Não consegui baixar o vídeo. Use um vídeo de até ${VIDEO_LIMIT}s ou tente outra busca. ${errorText(error)}`);
       }
     }
   }

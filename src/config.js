@@ -37,6 +37,7 @@ export const config = {
   clearSessionOnLogout: bool(process.env.CLEAR_SESSION_ON_LOGOUT, false),
   pairingPhone: process.env.PAIRING_PHONE || '',
   ytdlpBin: process.env.YTDLP_BIN || '',
+  videoLimitSeconds: int(process.env.VIDEO_LIMIT_SECONDS, 600),
   instanceLockFile: path.resolve(process.cwd(), process.env.INSTANCE_LOCK_FILE || './data/runtime/bot.lock'),
   logToFile: bool(process.env.LOG_TO_FILE, true),
   logFile: path.resolve(process.cwd(), process.env.LOG_FILE || './data/runtime/bot.log'),

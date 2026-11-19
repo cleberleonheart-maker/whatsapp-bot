@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { commands, findCommand } from '../src/commands/index.js';
-import { resolveTarget, resolveYtDlp } from '../src/commands/play.js';
+import { resolveTarget, resolveYtDlp, VIDEO_LIMIT } from '../src/commands/play.js';
 
 test('play: comandos e aliases registrados', () => {
   assert.ok(commands.length >= 83);
@@ -21,6 +21,10 @@ test('play: resolve alvo de busca e URL', () => {
 test('play: resolve binário yt-dlp', () => {
   const bin = resolveYtDlp();
   assert.match(bin, /(^|\/)yt-dlp$/);
+});
+
+test('play: limite padrão de vídeo aceita clipes de 216s', () => {
+  assert.ok(VIDEO_LIMIT >= 216);
 });
 
 test('play: exige consulta', async () => {

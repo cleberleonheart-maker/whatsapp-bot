@@ -139,7 +139,7 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 | `!meme Topo\|Base` | Gerar imagem com texto |
 | `!ocr` | Extrair texto de imagem (OCR.Space) |
 | `!play nome ou URL` | Baixar áudio do YouTube (yt-dlp) |
-| `!playvid nome ou URL` | Baixar vídeo curto do YouTube (yt-dlp) |
+| `!playvid nome ou URL` | Baixar vídeo do YouTube (yt-dlp, até `VIDEO_LIMIT_SECONDS`, padrão 600s) |
 
 ### Utilidades
 | Comando | Descrição |
@@ -188,7 +188,7 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 
 ## Configuração (.env)
 
-Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `LOG_SESSION_ERRORS`, `LOG_INCOMING_MESSAGES`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`.
+Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `LOG_SESSION_ERRORS`, `LOG_INCOMING_MESSAGES`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`, `YTDLP_BIN`, `VIDEO_LIMIT_SECONDS`.
 
 ## Docker
 

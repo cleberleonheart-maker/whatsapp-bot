@@ -12,6 +12,33 @@ async function fetchJson(url, timeout = 8000) {
   }
 }
 
+export const BR_STATES = {
+  AC: 'Acre', AL: 'Alagoas', AP: 'Amapá', AM: 'Amazonas', BA: 'Bahia', CE: 'Ceará',
+  DF: 'Distrito Federal', ES: 'Espírito Santo', GO: 'Goiás', MA: 'Maranhão',
+  MT: 'Mato Grosso', MS: 'Mato Grosso do Sul', MG: 'Minas Gerais', PA: 'Pará',
+  PB: 'Paraíba', PR: 'Paraná', PE: 'Pernambuco', PI: 'Piauí', RJ: 'Rio de Janeiro',
+  RN: 'Rio Grande do Norte', RS: 'Rio Grande do Sul', RO: 'Rondônia', RR: 'Roraima',
+  SC: 'Santa Catarina', SP: 'São Paulo', SE: 'Sergipe', TO: 'Tocantins'
+};
+
+export function parseCityQuery(text) {
+  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  const match = clean.match(/^(.*?)(?:\s*[,/-]\s*|\s+)([A-Za-z]{2})$/);
+  const state = match ? match[2].toUpperCase() : '';
+  if (state && BR_STATES[state]) return { name: match[1].trim(), state };
+  return { name: clean, state: '' };
+}
+
+export function pickPlace(results = [], state = '') {
+  if (!state) return results[0] || null;
+  const stateName = normalize(BR_STATES[state]);
+  return results.find((place) =>
+    normalize(place.admin1) === stateName ||
+    normalize(place.admin1).includes(stateName) ||
+    normalize(place.admin1_code) === state.toLowerCase()
+  ) || null;
+}
+
 const TIMEZONES = {
   brasilia: 'America/Sao_Paulo',
   sp: 'America/Sao_Paulo',
@@ -90,24 +117,26 @@ export const utilidadesCommands = [
     aliases: ['tempo', 'weather', 'previsao'],
     category: 'Utilidades',
     description: 'Clima atual de uma cidade',
-    usage: '!clima São Paulo',
+    usage: '!clima São Paulo ou !clima Alvorada RS',
     run(ctx) {
-      const city = ctx.text;
-      if (!city) return ctx.reply(`Informe a cidade. Ex: \`${ctx.prefix}clima São Paulo\``);
+      const where = parseCityQuery(ctx.text);
+      if (!where.name) return ctx.reply(`Informe a cidade. Ex: \`${ctx.prefix}clima São Paulo\``);
       return (async () => {
         try {
           const geo = await fetchJson(
-            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=pt&format=json`
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(where.name)}&count=10&language=pt&format=json` +
+            (where.state ? '&countryCode=BR' : '')
           );
-          const place = geo.results?.[0];
+          const place = pickPlace(geo.results, where.state);
           if (!place) return ctx.reply('Cidade não encontrada.');
           const weather = await fetchJson(
             `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}` +
             '&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto'
           );
           const current = weather.current;
+          const region = [place.admin1, place.country].filter(Boolean).join(', ');
           return ctx.reply(
-            `🌤️ *Clima em ${place.name}${place.country ? `, ${place.country}` : ''}*\n\n` +
+            `🌤️ *Clima em ${place.name}${region ? `, ${region}` : ''}*\n\n` +
             `${WEATHER_CODES[current.weather_code] || 'Condição desconhecida'}\n` +
             `🌡️ Temperatura: ${current.temperature_2m}°C\n` +
             `💧 Umidade: ${current.relative_humidity_2m}%\n` +
