@@ -69,7 +69,7 @@ async function normalizeVideo(file, directory) {
     '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '28',
     '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '96k',
     '-movflags', '+faststart', '-max_muxing_queue_size', '1024', output
-  ], { timeout: 300000, maxBuffer: 1024 * 1024 });
+  ], { timeout: 600000, maxBuffer: 1024 * 1024 });
   return output;
 }
 
