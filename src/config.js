@@ -24,6 +24,9 @@ export const config = {
   botName: process.env.BOT_NAME || 'Fênix',
   botDescription: process.env.BOT_DESCRIPTION || 'Fênix — bot de WhatsApp com piadas, jogos e utilidades',
   botLogo: path.resolve(process.cwd(), process.env.BOT_LOGO || './assets/fenix-logo.png'),
+  botSignature: process.env.BOT_SIGNATURE !== undefined
+    ? process.env.BOT_SIGNATURE
+    : '— 🔥 *Fênix* — piadas, jogos e utilidades',
   rateLimit: int(process.env.RATE_LIMIT, 12),
   cooldown: int(process.env.COOLDOWN_MS, 2500),
   autoRead: bool(process.env.AUTO_READ, true),

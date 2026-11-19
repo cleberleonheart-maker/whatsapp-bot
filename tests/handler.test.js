@@ -43,6 +43,7 @@ test('handler aceita comando com prefixo enviado pelo próprio número', async (
   assert.equal(stats.commands, 1);
   assert.equal(sent.length, 1);
   assert.match(sent[0].payload.text, /Piada/);
+  assert.match(sent[0].payload.text, /— 🔥 \*Fênix\*/);
 });
 
 test('handler ignora mensagem sem prefixo enviada pelo próprio número', async () => {

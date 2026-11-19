@@ -11,6 +11,13 @@ export function matchesBadWord(group, text) {
   return badWords.some((word) => new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRegExp(word)}($|[^\\p{L}\\p{N}])`, 'iu').test(String(text || '')));
 }
 
+export function appendSignature(text, signature = '') {
+  const body = String(text ?? '');
+  const sign = String(signature || '').trim();
+  if (!sign || body.includes(sign)) return body;
+  return `${body}\n\n${sign}`;
+}
+
 export const randomItem = (array) => array[Math.floor(Math.random() * array.length)];
 export const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

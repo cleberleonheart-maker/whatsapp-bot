@@ -3,7 +3,7 @@ import { findCommand } from './commands/index.js';
 import { handleGameMessage } from './commands/jogos.js';
 import { handleMessage as handleNovosJogos } from './commands/jogosnovos.js';
 import { handleMessage as handleRpgMessage } from './commands/rpg.js';
-import { jidToNumber, normalize } from './utils.js';
+import { appendSignature, jidToNumber, normalize } from './utils.js';
 import { log } from './logger.js';
 
 const cooldowns = new Map();
@@ -46,7 +46,7 @@ function buildContext(sock, msg, store, registry) {
   ctx.send = (payload, options = {}) => sock.sendMessage(jid, payload, { quoted: msg, ...options });
   ctx.reply = async (text, options = {}) => {
     const { react, ...sendOptions } = options;
-    const result = await sock.sendMessage(jid, { text }, { quoted: msg, ...sendOptions });
+    const result = await sock.sendMessage(jid, { text: appendSignature(text, config.botSignature) }, { quoted: msg, ...sendOptions });
     if (react) await ctx.react(react);
     return result;
   };

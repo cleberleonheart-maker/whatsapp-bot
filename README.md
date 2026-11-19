@@ -4,6 +4,8 @@ Bot de WhatsApp completo feito com [Baileys](https://github.com/WhiskeySockets/B
 
 Logo: `assets/fenix-logo.png` (aplicada automaticamente ao perfil do bot ao conectar).
 
+Assinatura visual: `assets/fenix-assinatura.png`. As respostas de texto também terminam com `BOT_SIGNATURE` (`— 🔥 *Fênix* — piadas, jogos e utilidades`); defina vazio para desativar.
+
 ## Requisitos
 
 - **Node.js 20 ou superior** (Baileys 6.7.22 exige Node >= 20)
@@ -194,7 +196,7 @@ Eventos rotacionam toda semana e podem ser de economia, trabalho, missões, inve
 
 ## Configuração (.env)
 
-Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `BOT_DESCRIPTION`, `BOT_LOGO`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `LOG_SESSION_ERRORS`, `LOG_INCOMING_MESSAGES`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`, `YTDLP_BIN`, `VIDEO_LIMIT_SECONDS`.
+Copie `.env.example` para `.env`. Principais opções: `PREFIX`, `OWNER_NUMBER`, `BOT_NAME`, `BOT_DESCRIPTION`, `BOT_LOGO`, `BOT_SIGNATURE`, `TZ`, `RATE_LIMIT`, `COOLDOWN_MS`, `AUTO_READ`, `WELCOME_ENABLED`, `ANTILINK_DEFAULT`, `FILTER_DEFAULT`, `XP_PER_MESSAGE`, `LOG_LEVEL`, `LOG_TO_FILE`, `LOG_FILE`, `LOG_MAX_BYTES`, `LOG_MAX_FILES`, `LOG_SESSION_ERRORS`, `LOG_INCOMING_MESSAGES`, `INSTANCE_LOCK_FILE`, `HEALTH_ALERTS`, `HEALTH_ALERT_JID`, `SESSION_DIR`, `CLEAR_SESSION_ON_LOGOUT`, `OCR_API_KEY`, `YTDLP_BIN`, `VIDEO_LIMIT_SECONDS`.
 
 ## Docker
 
