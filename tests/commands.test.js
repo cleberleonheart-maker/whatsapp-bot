@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import path from 'node:path';
 import { findCommand, commands } from '../src/commands/index.js';
 
 function makeCtx(text = '', overrides = {}) {
@@ -85,6 +86,23 @@ test('comando ajuda organiza menu por categoria', async () => {
   ctx.text = '2';
   await findCommand('ajuda').run(ctx);
   assert.match(ctx.sent[0].payload.text, /𝐃𝐈𝐕𝐄𝐑𝐒Ã𝐎/);
+});
+
+test('comando ajuda envia logo do bot junto com o menu', async () => {
+  const ctx = makeCtx('!ajuda', {
+    config: {
+      timezone: 'America/Sao_Paulo',
+      botName: 'Fênix',
+      botLogo: path.resolve('assets/fenix-logo.png'),
+      botSignature: '— 🔥 *Fênix* — piadas, jogos e utilidades'
+    }
+  });
+
+  await findCommand('ajuda').run(ctx);
+
+  assert.ok(Buffer.isBuffer(ctx.sent[0].payload.image));
+  assert.match(ctx.sent[0].payload.caption, /┏╾═╼❋/);
+  assert.match(ctx.sent[0].payload.caption, /— 🔥 \*Fênix\*/);
 });
 
 test('comando antilink alterna configuração do grupo', async () => {

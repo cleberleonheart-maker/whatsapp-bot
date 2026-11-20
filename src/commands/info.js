@@ -1,5 +1,6 @@
+import fs from 'node:fs';
 import os from 'node:os';
-import { formatMs, formatDate } from '../utils.js';
+import { appendSignature, formatMs, formatDate } from '../utils.js';
 
 const BOX_TOP = '┏╾═╼❋╾═╼⟡╾═╼❋╾═╼┓';
 const BOX_HEADER = '┣┄┄┅┄┅┄┅┄┅┄┅┄┄┫';
@@ -85,6 +86,20 @@ function renderMenu(ctx, title, sections) {
   return lines.join('\n');
 }
 
+async function sendMenu(ctx, text) {
+  const logo = ctx.config.botLogo;
+  const caption = appendSignature(text, ctx.config.botSignature);
+  if (caption.length <= 1024 && logo && fs.existsSync(logo)) {
+    try {
+      return await ctx.send({
+        image: fs.readFileSync(logo),
+        caption
+      });
+    } catch {}
+  }
+  return ctx.reply(text);
+}
+
 function overviewMenu(ctx, commands, categories) {
   const items = categories.map((name) => {
     const meta = categoryMeta(name);
@@ -150,31 +165,31 @@ export const infoCommands = [
     category: 'Informação',
     description: 'Mostrar todos os comandos',
     usage: '!ajuda [categoria]',
-    run(ctx) {
+    async run(ctx) {
       const commands = ctx.registry || [];
       const categories = sortCategories(commands);
       const raw = String(ctx.text || '').trim();
 
-      if (!raw) return ctx.reply(overviewMenu(ctx, commands, categories));
+      if (!raw) return sendMenu(ctx, overviewMenu(ctx, commands, categories));
 
       if (/^\d+$/.test(raw)) {
         const index = Number(raw) - 1;
         if (!categories[index]) {
           return ctx.reply(`Categoria inválida. Use um número de 1 a ${categories.length}.`);
         }
-        return ctx.reply(categoryMenu(ctx, commands, categories[index]));
+        return sendMenu(ctx, categoryMenu(ctx, commands, categories[index]));
       }
 
       const normalized = normalizeCategory(raw);
       if (['tudo', 'todos', 'completo', 'full', 'all'].includes(normalized)) {
-        return ctx.reply(fullMenu(ctx, commands, categories));
+        return sendMenu(ctx, fullMenu(ctx, commands, categories));
       }
 
       const target = categories.find((name) => normalizeCategory(name) === normalized);
       if (!target) {
         return ctx.reply(`Categoria não encontrada. Use: ${ctx.prefix}ajuda\n\nCategorias: ${categories.join(', ')}`);
       }
-      return ctx.reply(categoryMenu(ctx, commands, target));
+      return sendMenu(ctx, categoryMenu(ctx, commands, target));
     }
   },
   {
