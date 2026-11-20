@@ -1,7 +1,26 @@
+import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
 import dotenv from 'dotenv';
 import path from 'node:path';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+
+const packageVersion = JSON.parse(
+  fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8')
+).version;
+
+function resolveVersion() {
+  try {
+    const revisions = execFileSync('git', ['rev-list', '--count', 'HEAD'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore']
+    }).trim();
+    return revisions ? `1.0.${revisions}` : packageVersion;
+  } catch {
+    return packageVersion;
+  }
+}
 
 function int(value, fallback) {
   const parsed = Number.parseInt(value, 10);
@@ -14,6 +33,7 @@ function bool(value, fallback) {
 }
 
 export const config = {
+  version: resolveVersion(),
   prefix: process.env.PREFIX || '!',
   altPrefixes: (process.env.ALT_PREFIXES || '/').split(',').map((p) => p.trim()).filter(Boolean),
   ownerNumber: (process.env.OWNER_NUMBER || '').replace(/\D/g, ''),

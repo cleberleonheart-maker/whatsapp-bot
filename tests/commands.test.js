@@ -88,6 +88,16 @@ test('comando ajuda organiza menu por categoria', async () => {
   assert.match(ctx.sent[0].payload.text, /𝐃𝐈𝐕𝐄𝐑𝐒Ã𝐎/);
 });
 
+test('comando status usa a versão automática', async () => {
+  const ctx = makeCtx('!status');
+  ctx.config.version = '1.0.42';
+  ctx.store.users = {};
+
+  await findCommand('status').run(ctx);
+
+  assert.match(ctx.sent[0].payload.text, /Versão: 1\.0\.42/);
+});
+
 test('comando ajuda envia logo do bot junto com o menu', async () => {
   const ctx = makeCtx('!ajuda', {
     config: {

@@ -243,7 +243,7 @@ export const infoCommands = [
       const ranked = store.ranking(1)[0];
       return ctx.reply(
         `*${ctx.config.botName} — Status*\n\n` +
-        `🤖 Versão: 1.0.0\n` +
+        `🤖 Versão: ${ctx.config.version || '1.0.0'}\n` +
         `⚡ Uptime: ${formatMs(uptime)}\n` +
         `💬 Mensagens: ${store.stats.messages}\n` +
         `⌨️ Comandos: ${store.stats.commands}\n` +

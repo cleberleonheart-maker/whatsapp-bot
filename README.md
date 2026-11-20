@@ -2,7 +2,7 @@
 
 Bot de WhatsApp completo feito com [Baileys](https://github.com/WhiskeySockets/Baileys): piadas, jogos, utilidades, sistema de XP e moderação de grupos. Não precisa de navegador nem de API paga.
 
-Logo: `assets/fenix-logo.png` (aplicada automaticamente ao perfil do bot ao conectar).
+Logo: `assets/fenix-logo.png` (usada no menu do bot; a foto de perfil do WhatsApp não é alterada).
 
 Assinatura visual: `assets/fenix-assinatura.png`. As respostas de texto também terminam com `BOT_SIGNATURE` (`— 🔥 *Fênix* — piadas, jogos e utilidades`); defina vazio para desativar.
 

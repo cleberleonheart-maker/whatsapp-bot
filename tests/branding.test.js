@@ -10,6 +10,7 @@ test('branding: nome, logo e assinatura da Fênix configurados', () => {
   assert.ok(fs.existsSync('assets/fenix-assinatura.png'));
   assert.match(config.botDescription, /Fênix/);
   assert.equal(config.botSignature, '— 🔥 *Fênix* — piadas, jogos e utilidades');
+  assert.match(config.version, /^1\.0\.\d+$/);
 });
 
 test('appendSignature adiciona a assinatura sem duplicar', () => {
